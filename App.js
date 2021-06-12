@@ -151,8 +151,8 @@ const App = () => {
             </View>
             <View style={styles.center}>
               <Text style={{fontSize:25}}>{name.substr(0,name.indexOf(" "))+"'s Todo List"}</Text>
-              <TouchableOpacity style={{marginTop:'2%',backgroundColor:"#F4D4B7"}}>
-                <Button onPress = {signOut} color="#F4D4B7" style={{marginTop:'5%',backgroundColor:"#F4D4B7"}} title="LOG OUT"></Button>
+              <TouchableOpacity style={{marginTop:'2%',backgroundColor:"#F4D4B7", padding:'5%'}} onPress = {signOut}>
+                <Text>LOG OUT</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -175,8 +175,8 @@ const App = () => {
             required
           />
         
-          <TouchableOpacity style={{height:45}}>
-            <Button onPress={handleSubmit} color="#F4D4B7" title="Submit">Submit</Button>
+          <TouchableOpacity style={{height:45,backgroundColor:'#F4D4B7',justifyContent:'center',alignItems:'center'}} onPress={handleSubmit} >
+            <Text>Submit</Text>
           </TouchableOpacity>
         
       </SafeAreaView>
