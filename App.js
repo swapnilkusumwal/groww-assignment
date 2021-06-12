@@ -12,14 +12,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
   Button,
   AsyncStorage,
   Alert,
   Image,
   FlatList,
-  TextInput
+  TextInput,
+  SafeAreaView
 } from 'react-native';
 import {
   GoogleSignin,
@@ -66,7 +66,8 @@ const App = () => {
       await AsyncStorage.setItem('userData', JSON.stringify({name:userData.user.name, photo:userData.user.photo}))
       .catch(err=>console.log(err))
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert(JSON.stringify(error));
+      console.log(JSON.stringify(error))
       setIsLoading(false)
       // if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       //   // user cancelled the login flow
@@ -91,7 +92,7 @@ const App = () => {
       .catch(err=>console.log(err))
       setIsLoading(false);
     } catch (error) {
-      Alert.alert(error);
+      Alert.alert(JSON.stringify(error));
     }
   };
   const handleSubmit = async() =>{
@@ -112,7 +113,7 @@ const App = () => {
     }
   }
   const onRemove = async(id) => {
-    console.log(id);
+    // console.log(id);
     let tempList = checkList.filter((todo,index) => index !== id);
     setCheckList(tempList);
     await AsyncStorage.setItem('userData', JSON.stringify({name:name, photo:photo, checkList:tempList}))
@@ -142,6 +143,7 @@ const App = () => {
   else if(name && photo){
     return(
       <LinearGradient colors={['#99ddff','#99ddaa']} style={{flex:2}}>
+      <SafeAreaView>
         <View style={styles.box}>
           <View style={{flexDirection:'row'}}>
             <View style={{padding:'2%'}}>
@@ -149,9 +151,9 @@ const App = () => {
             </View>
             <View style={styles.center}>
               <Text style={{fontSize:25}}>{name.substr(0,name.indexOf(" "))+"'s Todo List"}</Text>
-              <View style={{backgroundColor:'#F4D4B7',marginTop:'5%'}}>
-                <Button onPress = {signOut} style={{marginTop:'5%'}} color="black" title="LOG OUT"></Button>
-              </View>
+              <TouchableOpacity style={{marginTop:'2%',backgroundColor:"#F4D4B7"}}>
+                <Button onPress = {signOut} color="#F4D4B7" style={{marginTop:'5%',backgroundColor:"#F4D4B7"}} title="LOG OUT"></Button>
+              </TouchableOpacity>
             </View>
           </View>
           {/* {/* */}
@@ -173,10 +175,11 @@ const App = () => {
             required
           />
         
-          <View style={{height:45,backgroundColor:'#F4D4B7'}}>
-            <Button onPress={handleSubmit} color="black" title="Submit">Submit</Button>
-          </View>
+          <TouchableOpacity style={{height:45}}>
+            <Button onPress={handleSubmit} color="#F4D4B7" title="Submit">Submit</Button>
+          </TouchableOpacity>
         
+      </SafeAreaView>
       </LinearGradient>
     )
   }
@@ -226,7 +229,7 @@ const styles = StyleSheet.create({
     borderColor: "#20232a",
     borderRadius: 3,
     margin:'5%',
-    marginTop:'10%'
+    marginTop:'0%'
   },
   innerBox:{
     borderWidth: 2,
@@ -253,6 +256,7 @@ const styles = StyleSheet.create({
     borderColor: "#20232a",
     borderRadius: 3,
     margin:'5%', 
+    marginTop:0,
     maxHeight:'60%',
     minHeight:'60%',
     borderWidth: 1,
