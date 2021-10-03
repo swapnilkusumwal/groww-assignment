@@ -7,7 +7,6 @@
  */
 
 import React,{useState, useEffect} from 'react';
-// import auth from '@react-native-firebase/auth';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -26,7 +25,6 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {ActivityIndicator} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Loading } from './Loading';
 import Config from './config';
@@ -54,30 +52,30 @@ const App = () => {
       setIsLoading(false)
     })
   },[])
+
+  const saveToLocalStorage = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (error) {
+      console.error("AsyncStorageError",error);
+    }
+  }
+
   const signIn = async () => {
     try {
       setIsLoading(true);
       await GoogleSignin.hasPlayServices();
       const userData = await GoogleSignin.signIn();
+      const { photo, name } = userData.user;
       console.log(userData)
-      setPhoto(userData.user.photo);
-      setName(userData.user.name);
+      setPhoto(photo);
+      setName(name);
       setIsLoading(false);
-      await AsyncStorage.setItem('userData', JSON.stringify({name:userData.user.name, photo:userData.user.photo}))
+      saveToLocalStorage('userData', JSON.stringify({name: name, photo: photo}))
       .catch(err=>console.log(err))
     } catch (error) {
       Alert.alert(JSON.stringify(error));
-      console.log(JSON.stringify(error))
       setIsLoading(false)
-      // if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-      //   // user cancelled the login flow
-      // } else if (error.code === statusCodes.IN_PROGRESS) {
-      //   // operation (e.g. sign in) is in progress already
-      // } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-      //   // play services not available or outdated
-      // } else {
-      // }
-      // Alert.alert(error)
     }
   };
   const signOut = async () => {
@@ -88,7 +86,7 @@ const App = () => {
       setPhoto("");
       setName("");
       setCheckList([])
-      await AsyncStorage.setItem('userData', JSON.stringify({name:"", photo:"", checkList:[]}))
+      saveToLocalStorage('userData', JSON.stringify({name:"", photo:"", checkList:[]}))
       .catch(err=>console.log(err))
       setIsLoading(false);
     } catch (error) {
@@ -108,7 +106,7 @@ const App = () => {
       temp.push(text);
       setText("");
       setCheckList([...temp])
-      await AsyncStorage.setItem('userData', JSON.stringify({name:name, photo:photo, checkList:temp}))
+      saveToLocalStorage('userData', JSON.stringify({name:name, photo:photo, checkList:temp}))
         .catch(err=>console.log(err))
     }
   }
@@ -116,12 +114,13 @@ const App = () => {
     // console.log(id);
     let tempList = checkList.filter((todo,index) => index !== id);
     setCheckList(tempList);
-    await AsyncStorage.setItem('userData', JSON.stringify({name:name, photo:photo, checkList:tempList}))
+    saveToLocalStorage('userData', JSON.stringify({name:name, photo:photo, checkList:tempList}))
     .catch(err=>console.log(err))
   };
   
-  const renderItem = ({ item,index }) => {return(
-
+  const renderItem = ({ item,index }) => 
+  {
+    return(
     <View key={index} style={{padding:5}}>
       <View style={styles.innerBox}>
         <View style={{flexDirection:'row', height:100}}>
