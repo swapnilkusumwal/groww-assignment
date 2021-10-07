@@ -14,11 +14,17 @@ const styles = StyleSheet.create({
     }
 });
 
-export const Loading = () => {
+const LoadingComponent = () =>{
     return(
         <View style={styles.loadingView} >
             <ActivityIndicator size="large" color="#99ddff" />
             <Text style={styles.loadingText} >Loading . . .</Text>
         </View>
+    )
+}
+
+export const Loading = () => {
+    return(
+        <LoadingComponent/>
     );
 };
